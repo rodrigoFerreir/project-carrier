@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}Lista de Veículos{% endblock %}
+
+{% block content %}
+  <h1 class="mb-4">Lista de Veículos</h1>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Nome</th>
+        <th>Capacidade Máxima (kg)</th>
+        <th>Custo por KM (R$)</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for vehicle in vehicles %}
+      <tr>
+        <td>{{ vehicle.name }}</td>
+        <td>{{ vehicle.max_capacity }}</td>
+        <td>{{ vehicle.cost_per_km }}</td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="3">Nenhum veículo cadastrado.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

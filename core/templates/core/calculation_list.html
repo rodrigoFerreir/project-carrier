@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block title %}Histórico de Cálculos de Transporte{% endblock %}
+
+{% block content %}
+  <h1 class="mb-4">Histórico de Cálculos de Transporte</h1>
+  
+  {% if calculations %}
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Data</th>
+          <th>Veículo</th>
+          <th>Peso (kg)</th>
+          <th>Distância (km)</th>
+          <th>Custo Total (R$)</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for calc in calculations %}
+        <tr>
+          <td>{{ calc.calculated_at|date:"d/m/Y H:i" }}</td>
+          <td>{{ calc.vehicle.name }}</td>
+          <td>{{ calc.weight }}</td>
+          <td>{{ calc.distance }}</td>
+          <td>{{ calc.total_cost }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>Nenhum cálculo realizado até o momento.</p>
+  {% endif %}
+{% endblock %}

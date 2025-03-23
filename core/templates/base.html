@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Sistema de Transportadora{% endblock %}</title>
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  {% load static %}
+
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+
+</head>
+<body>
+  <!-- Cabeçalho e navegação -->
+  <nav class="navbar navbar-expand-lg">
+    <a class="navbar-brand" href="{% url 'vehicle_list' %}">Transportadora</a>
+    <div class="collapse navbar-collapse">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'vehicle_list' %}">Veículos</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'import_vehicles' %}">Importar Veículos</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'calculate_cost' %}">Calcular Custo</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'calculation_list' %}">Lista de Calculos</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+  
+  <!-- Conteúdo principal -->
+  <div class="container">
+    {% block content %}
+    {% endblock %}
+  </div>
+  
+  <!-- Rodapé -->
+  <footer>
+    <p>&copy; 2025 Transportadora. Todos os direitos reservados.</p>
+  </footer>
+  
+  <!-- Scripts do Bootstrap -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+  {% block extra_js %}{% endblock %}
+</body>
+</html>
+

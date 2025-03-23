@@ -1,0 +1,29 @@
+[
+    {
+        "model": "core.vehicle",
+        "pk": 1,
+        "fields": {
+            "name": "Caminhão Pequeno",
+            "max_capacity": 5000,
+            "cost_per_km": "5.00"
+        }
+    },
+    {
+        "model": "core.vehicle",
+        "pk": 2,
+        "fields": {
+            "name": "Caminhão Médio",
+            "max_capacity": 20000,
+            "cost_per_km": "10.00"
+        }
+    },
+    {
+        "model": "core.vehicle",
+        "pk": 3,
+        "fields": {
+            "name": "Caminhão Grande",
+            "max_capacity": 50000,
+            "cost_per_km": "20.00"
+        }
+    }
+]

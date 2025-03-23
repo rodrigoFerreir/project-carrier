@@ -1,0 +1,46 @@
+
+{% extends "base.html" %}
+
+
+{% block title %}Importar Veículos{% endblock %}
+
+{% block content %}
+  <h1>Importar Veículos</h1>
+  {% if messages %}
+    {% for message in messages %}
+      <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">
+        {{ message }}
+      </div>
+    {% endfor %}
+  {% endif %}
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="file-upload">
+      {{ form.file }}
+        <button id="upload-button" type="button" class="btn btn-primary">Selecionar Arquivo</button>
+        <span id="file-name">Nenhum arquivo selecionado</span>
+    </div>
+    <div class="mt-3">
+        <button type="submit" class="btn btn-success">Importar</button>
+    </div>
+  </form>
+{% endblock %}
+
+{% block extra_js %}
+  <script>
+
+    document.getElementById('upload-button').addEventListener('click', () => {
+        const fileInput = document.getElementById('id_file'); //campo interno do form django
+        const fileName = document.getElementById('file-name');
+        fileInput.click();
+
+        fileInput.addEventListener('change', function() {
+            if (fileInput.files.length > 0) {
+                fileName.textContent = fileInput.files[0].name;
+            } else {
+                fileName.textContent = 'Nenhum arquivo selecionado';
+            }
+        });
+    });
+  </script>
+{% endblock %}

@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}Calcular Custo de Transporte{% endblock %}
+
+{% block content %}
+  <h1 class="mb-4">Calcular Custo de Transporte</h1>
+  
+  <!-- Formulário para entrada de dados -->
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">Calcular</button>
+  </form>
+  
+  <!-- Exibição do resultado, caso exista -->
+  {% if cost %}
+  <div class="mt-4">
+    <h3>Resultado</h3>
+    <p>
+      Veículo: <strong>{{ vehicle.name }}</strong><br>
+      Para uma carga de <strong>{{ weight }} kg</strong> e uma distância de <strong>{{ distance }} km</strong>, o custo de transporte é: 
+      <strong>R$ {{ cost }}</strong>
+    </p>
+  </div>
+  {% endif %}
+{% endblock %}

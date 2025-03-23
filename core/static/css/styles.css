@@ -1,0 +1,51 @@
+/* Estilos gerais da aplicação */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f8f9fa;
+    color: #333;
+}
+.navbar {
+    background-color: #005b96;
+}
+.navbar-brand, .nav-link {
+    color: #fff !important;
+}
+footer {
+    background-color: #005b96;
+    color: #fff;
+    padding: 1rem 0;
+    text-align: center;
+    margin-top: 2rem;
+}
+.container {
+    margin-top: 2rem;
+}
+
+/* Estilos para o formulário de upload */
+.file-upload {
+  display: flex;
+  align-items: center;
+}
+
+.file-upload input[type="file"] {
+  display: none;
+}
+
+.file-upload button {
+  background-color: #007bff; /* Cor primária da aplicação */
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  border-radius: 5px;
+  margin-right: 10px;
+}
+
+.file-upload button:hover {
+  background-color: #0056b3; /* Tom mais escuro para hover */
+}
+
+#file-name {
+  font-style: italic;
+  color: #555;
+}
