@@ -30,8 +30,8 @@ Este projeto é um sistema para calcular o custo de transporte de cargas com bas
 ### 1. Clonando o Repositório
 
 ```bash
-git clone https://github.com/seu-usuario/sistema-transportadora.git
-cd sistema-transportadora
+git clone https://github.com/rodrigoFerreir/project-carrier.git
+cd project-carrier
 ```
 
 
