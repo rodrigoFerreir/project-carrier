@@ -13,26 +13,8 @@
 </head>
 <body>
   <!-- Cabeçalho e navegação -->
-  <nav class="navbar navbar-expand-lg">
-    <a class="navbar-brand" href="{% url 'vehicle_list' %}">Transportadora</a>
-    <div class="collapse navbar-collapse">
-      <ul class="navbar-nav mr-auto">
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'vehicle_list' %}">Veículos</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'import_vehicles' %}">Importar Veículos</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'calculate_cost' %}">Calcular Custo</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'calculation_list' %}">Lista de Cálculos</a>
-        </li>
-      </ul>
-    </div>
-  </nav>
-  
+    {% include "includes/nav_bar.html" %}
+
   <!-- Conteúdo principal -->
   <div class="container">
     {% block content %}
@@ -40,9 +22,7 @@
   </div>
   
   <!-- Rodapé -->
-  <footer>
-    <p>&copy; 2025 Transportadora. Todos os direitos reservados.</p>
-  </footer>
+  {% include "includes/footer.html" %}
   
   <!-- Scripts do Bootstrap -->
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>

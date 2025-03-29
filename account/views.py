@@ -1,4 +1,5 @@
 from django.contrib.auth import login as auth_login
+from django.contrib.auth import logout
 from django.contrib.auth.views import (
     LoginView,
     PasswordResetCompleteView,
@@ -8,6 +9,7 @@ from django.contrib.auth.views import (
 )
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render
+from django.views import View
 
 
 from .forms import CustomUserForm, MyAuthenticationForm
@@ -128,10 +130,22 @@ class MyLoginView(LoginView):
         return self.render_to_response(self.get_context_data(form=form))
 
     def form_valid(self, form):
-        redirect_to = "/app/veiculos/"
+        redirect_to = "vehicle_list"
         user = form.get_user()
 
         # Autentica usuário
         auth_login(self.request, user)
 
-        return HttpResponseRedirect(redirect_to)
+        return redirect(redirect_to)
+
+
+class MyLogoutView(View):
+    def get(self, request, *args, **kwargs):
+        return self.post(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        redirect_to = "login"
+        print("LOGOUT")
+        # Efetua o logout do usuário
+        logout(request)
+        return redirect(redirect_to)

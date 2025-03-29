@@ -17,9 +17,12 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path, include
+from .views import RedirectToHomeView, HelloView
 
 urlpatterns = [
-    path("", include("account.urls")),
+    path("", RedirectToHomeView.as_view(), name='redirect_to_home'),
+    path("hello", HelloView.as_view(), name='hello'),
     path("app/", include("core.urls")),
+    path("accounts/", include("account.urls")),
     path("admin/", admin.site.urls),
 ]

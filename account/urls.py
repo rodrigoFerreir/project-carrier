@@ -12,8 +12,8 @@ user_patterns = [
 ]
 
 urlpatterns = [
-    path('', MyLoginView.as_view(), name='login'),  # noqa E501
-    path('logout/', LogoutView.as_view(), name='logout'),  # noqa E501
+    path('login/', MyLoginView.as_view(), name='login'),  # noqa E501
+    path('logout/', MyLogoutView.as_view(), name='logout'),  # noqa E501
     path('register/', signup, name='signup'),  # noqa E501
     path('reset/<uidb64>/<token>/', MyPasswordResetConfirm.as_view(), name='password_reset_confirm'),  # noqa E501
     path('reset/done/', MyPasswordResetComplete.as_view(), name='password_reset_complete'),  # noqa E501
