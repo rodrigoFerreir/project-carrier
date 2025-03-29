@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.urls import reverse_lazy
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView, FormView
 from django import forms
 from django.contrib import messages
@@ -37,11 +38,10 @@ class CostCalculationForm(forms.Form):
 
 
 # View para exibir a lista de veículos disponíveis.
-class VehicleListView(ListView):
+class VehicleListView(LoginRequiredMixin, ListView):
+
     model = Vehicle
-    template_name = (
-        "core/vehicle_list.html"  # Crie este template para listar os veículos.
-    )
+    template_name = "core/vehicle_list.html"  # Crie este template para listar os veículos.
     context_object_name = "vehicles"
 
     # Opcional: você pode adicionar filtros ou ordenações na query.
@@ -50,7 +50,7 @@ class VehicleListView(ListView):
 
 
 # View para realizar o cálculo do custo de transporte.
-class CostCalculationView(FormView):
+class CostCalculationView(LoginRequiredMixin, FormView):
     template_name = "core/calculate_cost.html"  # Crie este template para o formulário e o resultado.
     form_class = CostCalculationForm
     success_url = reverse_lazy("calculate_cost")
@@ -68,18 +68,14 @@ class CostCalculationView(FormView):
             form.add_error("weight", str(e))
             return self.form_invalid(form)
 
-        TransportCalculation.objects.create(
-            vehicle=vehicle, weight=weight, distance=distance, total_cost=cost
-        )
+        TransportCalculation.objects.create(vehicle=vehicle, weight=weight, distance=distance, total_cost=cost)
 
         return self.render_to_response(
-            self.get_context_data(
-                form=form, cost=cost, weight=weight, distance=distance, vehicle=vehicle
-            )
+            self.get_context_data(form=form, cost=cost, weight=weight, distance=distance, vehicle=vehicle)
         )
 
 
-class CalculationListView(ListView):
+class CalculationListView(LoginRequiredMixin, ListView):
     """
     View que lista todos os cálculos de transporte realizados.
     Os cálculos serão ordenados pela data de cálculo (do mais recente para o mais antigo).
@@ -91,7 +87,7 @@ class CalculationListView(ListView):
     ordering = ["-calculated_at"]
 
 
-class ImportVehiclesView(FormView):
+class ImportVehiclesView(LoginRequiredMixin, FormView):
     template_name = "core/import_vehicles.html"
     form_class = UploadFileForm
     success_url = reverse_lazy("import_vehicles")
@@ -103,14 +99,10 @@ class ImportVehiclesView(FormView):
             file.read().decode("utf-8"), format=file.name.split(".")[-1]
         )  # Ajuste o formato conforme necessário
         vehicle_resource = VehicleResource()
-        result = vehicle_resource.import_data(
-            imported_data, dry_run=True
-        )  # Teste de importação
+        result = vehicle_resource.import_data(imported_data, dry_run=True)  # Teste de importação
 
         if not result.has_errors():
-            vehicle_resource.import_data(
-                imported_data, dry_run=False
-            )  # Importação real
+            vehicle_resource.import_data(imported_data, dry_run=False)  # Importação real
             messages.success(self.request, "Veículos importados com sucesso!")
         else:
             messages.error(self.request, "Erros encontrados durante a importação.")

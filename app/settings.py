@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     "import_export",
     # My apps
     "core",
+    "account",
 ]
 
 MIDDLEWARE = [
@@ -53,7 +54,7 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = "app.urls"
-
+AUTH_USER_MODEL = "account.User"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",

@@ -1,0 +1,23 @@
+/* Estilos gerais da aplicação */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f8f9fa;
+    color: #333;
+}
+.navbar {
+    background-color: #005b96;
+}
+.navbar-brand, .nav-link {
+    color: #fff !important;
+}
+
+footer {
+    background-color: #005b96;
+    color: #fff;
+    padding: 1rem 0;
+    text-align: center;
+    margin-top: 2rem;
+}
+.container {
+    margin-top: 2rem;
+}
