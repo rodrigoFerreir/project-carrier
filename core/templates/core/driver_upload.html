@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}Cadastrar Motorista{% endblock %}
+{% block content %}
+  <h1>Passo 1: Enviar documento</h1>
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button class="btn btn-primary">Enviar</button>
+  </form>
+{% endblock %}

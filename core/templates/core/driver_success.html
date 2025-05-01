@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% block title %}Cadastro Concluído{% endblock %}
+{% block content %}
+  <div class="alert alert-success">
+    Motorista cadastrado com sucesso!
+  </div>
+  <a href="{% url 'driver_upload' %}" class="btn btn-primary">Cadastrar outro</a>
+{% endblock %}

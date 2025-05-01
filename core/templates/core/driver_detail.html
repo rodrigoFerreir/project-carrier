@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}Detalhe do Motorista{% endblock %}
+
+{% block content %}
+  <h1>Dados do Motorista</h1>
+
+  <div class="card mb-4" style="max-width: 600px;">
+    <div class="row no-gutters">
+      {% if driver.image %}
+      <div class="col-md-4">
+        <img src="{{ driver.image.url }}" class="card-img" alt="Foto de {{ driver.name }}">
+      </div>
+      {% endif %}
+      <div class="col-md-8">
+        <div class="card-body">
+          <h5 class="card-title">{{ driver.name }}</h5>
+          <p class="card-text"><strong>CPF:</strong> {{ driver.cpf }}</p>
+          <p class="card-text"><strong>Telefone:</strong> {{ driver.phone }}</p>
+          <p class="card-text"><strong>Válido:</strong> {{ driver.valid|yesno:"Sim,Não" }}</p>
+          <p class="card-text"><small class="text-muted">Cadastrado em {{ driver.created_at|date:"d/m/Y H:i" }}</small></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <a href="{% url 'driver_list' %}" class="btn btn-secondary">Voltar à Lista</a>
+{% endblock %}

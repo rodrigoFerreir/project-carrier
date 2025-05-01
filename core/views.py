@@ -1,16 +1,22 @@
-from django.shortcuts import render
+from encodings.punycode import T
+import os
+from django.shortcuts import render, redirect
+from django.conf import settings
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import ListView, FormView
+from django.views.generic import ListView, FormView, DetailView
 from django import forms
+from django.views import View
 from django.contrib import messages
+from django.core.files import File
 from tablib import Dataset
 
-
+from .forms import DocumentUploadForm, DriverValidationForm
 from .resources import VehicleResource
-
-from .models import Vehicle, TransportCalculation
+from .models import Vehicle, TransportCalculation, Driver
 from .services import TransportCalculator
+
+from core.utils.ocr import DocumentOCR
 
 
 # Formulário para importação de veiculos.
@@ -108,3 +114,127 @@ class ImportVehiclesView(LoginRequiredMixin, FormView):
             messages.error(self.request, "Erros encontrados durante a importação.")
 
         return super().form_valid(form)
+
+
+class DocumentUploadView(View):
+    """
+    1ª etapa: faz upload da imagem, executa OCR e redireciona para validação.
+    """
+
+    template_name = 'core/driver_upload.html'
+    form_class = DocumentUploadForm
+    document_ocr = DocumentOCR()
+
+    def get(self, request):
+        return render(request, self.template_name, {'form': self.form_class()})
+
+    def post(self, request):
+        form = self.form_class(request.POST, request.FILES)
+        if not form.is_valid():
+            return render(request, self.template_name, {'form': form})
+
+        image = form.cleaned_data['document_image']
+        # salva temporariamente
+        temp_path = os.path.join(settings.MEDIA_ROOT, "drivers")
+        os.makedirs(temp_path, exist_ok=True)
+
+        temp_image_path = os.path.join(temp_path, image.name)
+
+        with open(temp_image_path, 'wb') as f:
+            for chunk in image.chunks():
+                f.write(chunk)
+
+        # extrai dados
+        data = self.document_ocr.extract_data_document(temp_image_path)
+        # extrai imagem
+        image = self.document_ocr.extract_image(temp_image_path)
+        # armazena dados e caminho na sessão
+        request.session['driver_data'] = data
+        request.session['driver_image_path'] = image
+
+        return redirect('driver_validate')
+
+
+class DriverValidateView(View):
+    """
+    2ª etapa: mostra formulário com dados extraídos, permite correção.
+    """
+
+    template_name = 'core/driver_validate.html'
+    form_class = DriverValidationForm
+
+    def get(self, request):
+        data = request.session.get('driver_data', {})
+        initial = {
+            'name': data.get('name', ''),
+            'cpf': data.get('cpf', ''),
+            'phone': data.get('phone', ''),
+        }
+        # prepara form
+        form = self.form_class(initial=initial)
+        url_image = os.path.relpath(request.session.get('driver_image_path', ''), settings.MEDIA_ROOT)
+        url_image = "/media/" + url_image
+        print(url_image)
+        context = {
+            'form': form,
+            'doc_image_url': url_image,
+        }
+        return render(
+            request,
+            self.template_name,
+            context,
+        )
+
+    def post(self, request):
+        form = self.form_class(request.POST)
+        image_path = request.session.get('driver_image_path')
+        if not form.is_valid():
+            return render(request, self.template_name, {'form': form})
+
+        # salva Driver definitivo
+        driver = form.save(commit=False)
+
+        # anexar a imagem de documento ao campo image
+        with open(image_path, 'rb') as f:
+            driver.image.save(os.path.basename(image_path), File(f), save=False)
+        driver.valid = True
+        driver.save()
+
+        # limpa sessão
+        request.session.pop('driver_data', None)
+        request.session.pop('driver_image_path', None)
+
+        messages.success(request, "Motorista cadastrado com sucesso!")
+        return redirect('driver_success')
+
+
+class DriverSuccessView(View):
+    """
+    Página de sucesso após cadastro.
+    """
+
+    template_name = 'core/driver_success.html'
+
+    def get(self, request):
+        return render(request, self.template_name)
+
+
+class DriverListView(ListView):
+    """
+    Exibe uma lista de todos os condutores cadastrados.
+    """
+
+    model = Driver
+    template_name = 'core/driver_list.html'  # template que será renderizado
+    context_object_name = 'drivers'  # nome da variável no contexto
+    paginate_by = 20  # opcional: paginação
+
+
+class DriverDetailView(DetailView):
+    """
+    Exibe os dados completos de um motorista.
+    """
+
+    model = Driver
+    template_name = 'core/driver_detail.html'  # Template a ser usado
+    context_object_name = 'driver'

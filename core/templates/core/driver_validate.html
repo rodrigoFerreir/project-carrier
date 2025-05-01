@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Validar Dados do Motorista{% endblock %}
+{% block content %}
+  <h1>Passo 2: Revise e confirme</h1>
+  <div class="mb-3">
+    <img src="{{ MEDIA_URL }}{{ doc_image_url }}" alt="Documento" class="img-fluid">
+  </div>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button class="btn btn-success">Confirmar Cadastro</button>
+  </form>
+{% endblock %}
